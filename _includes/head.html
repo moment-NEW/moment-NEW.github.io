@@ -52,4 +52,206 @@
 
     <!-- ga & ba script hoook -->
     <script></script>
+
+    <!-- Cassette Futurism / Retro-Futurism aesthetic overrides -->
+    <style>
+        /* ── Palette & Base ────────────────────────────────────────────── */
+        :root {
+            --cf-bg:        #1a1a1a;
+            --cf-bg-deep:   #111111;
+            --cf-amber:     #ffb000;
+            --cf-teal:      #00f0ff;
+            --cf-dim:       #888866;
+            --cf-border:    #3a3a2a;
+            --cf-glow-a:    0 0 6px #ffb000aa, 0 0 14px #ffb00055;
+            --cf-glow-t:    0 0 6px #00f0ffaa, 0 0 14px #00f0ff55;
+            --cf-mono:      'Courier New', Courier, monospace;
+            --cf-z-overlay: 1000;
+        }
+
+        /* ── Body ──────────────────────────────────────────────────────── */
+        body {
+            background-color: var(--cf-bg) !important;
+            color: #d4c8a0 !important;
+            font-family: var(--cf-mono);
+        }
+
+        /* CRT scanline overlay */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: var(--cf-z-overlay);
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 3px,
+                rgba(0, 0, 0, 0.18) 3px,
+                rgba(0, 0, 0, 0.18) 4px
+            );
+        }
+
+        /* ── Fade-in animation ─────────────────────────────────────────── */
+        @keyframes cassette-fade-in {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            animation: cassette-fade-in 0.7s ease both;
+        }
+
+        /* ── Navbar ────────────────────────────────────────────────────── */
+        .navbar-default,
+        .navbar-custom {
+            background-color: rgba(17, 17, 17, 0.96) !important;
+            border-bottom: 1px solid var(--cf-border) !important;
+        }
+
+        .navbar-default .navbar-brand,
+        .navbar-custom .navbar-brand,
+        .navbar-default .nav li a,
+        .navbar-custom .nav li a {
+            color: var(--cf-amber) !important;
+            letter-spacing: 0.08em;
+        }
+
+        .navbar-default .nav li a:hover,
+        .navbar-custom .nav li a:hover,
+        .navbar-default .navbar-brand:hover,
+        .navbar-custom .navbar-brand:hover {
+            color: var(--cf-teal) !important;
+            text-shadow: var(--cf-glow-t);
+        }
+
+        /* ── Intro / Page Header ───────────────────────────────────────── */
+        .intro-header {
+            background-blend-mode: multiply !important;
+            background-color: rgba(17, 17, 17, 0.72) !important;
+        }
+
+        .intro-header .site-heading h1,
+        .intro-header .post-heading h1,
+        .intro-header .page-heading h1 {
+            color: var(--cf-amber) !important;
+            text-shadow: var(--cf-glow-a);
+            font-family: var(--cf-mono);
+            letter-spacing: 0.06em;
+        }
+
+        .intro-header .subheading {
+            color: var(--cf-teal) !important;
+            text-shadow: var(--cf-glow-t);
+            font-family: var(--cf-mono);
+        }
+
+        /* ── Links ─────────────────────────────────────────────────────── */
+        a {
+            color: var(--cf-teal) !important;
+            transition: color 0.2s ease, text-shadow 0.2s ease !important;
+        }
+
+        a:hover, a:focus {
+            color: var(--cf-amber) !important;
+            text-shadow: var(--cf-glow-a);
+            text-decoration: none !important;
+        }
+
+        /* ── Headings ──────────────────────────────────────────────────── */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--cf-amber) !important;
+            font-family: var(--cf-mono);
+            letter-spacing: 0.04em;
+        }
+
+        h1:hover, h2:hover, h3:hover {
+            text-shadow: var(--cf-glow-a);
+        }
+
+        /* ── Post Preview Cards ────────────────────────────────────────── */
+        .post-preview > a .post-title,
+        .post-preview > a .post-subtitle {
+            color: var(--cf-amber) !important;
+        }
+
+        .post-preview > a:hover .post-title {
+            text-shadow: var(--cf-glow-a);
+        }
+
+        .post-content-preview {
+            color: #b8aa88 !important;
+        }
+
+        .post-meta {
+            color: var(--cf-dim) !important;
+            font-family: var(--cf-mono);
+            font-size: 0.82em;
+        }
+
+        /* ── Code Blocks ───────────────────────────────────────────────── */
+        code, pre, kbd, samp {
+            font-family: var(--cf-mono) !important;
+            background-color: #0d0d0d !important;
+            color: var(--cf-teal) !important;
+            border: 1px solid var(--cf-border) !important;
+            border-radius: 3px !important;
+        }
+
+        pre {
+            padding: 12px !important;
+        }
+
+        /* ── HR Dividers ───────────────────────────────────────────────── */
+        hr {
+            border-color: var(--cf-border) !important;
+        }
+
+        /* ── Footer ────────────────────────────────────────────────────── */
+        footer {
+            background-color: var(--cf-bg-deep) !important;
+            color: var(--cf-dim) !important;
+            border-top: 1px solid var(--cf-border) !important;
+        }
+
+        footer a {
+            color: var(--cf-amber) !important;
+        }
+
+        /* ── Tags ──────────────────────────────────────────────────────── */
+        .tags a {
+            background-color: #222211 !important;
+            border: 1px solid var(--cf-border) !important;
+            color: var(--cf-amber) !important;
+            border-radius: 2px;
+        }
+
+        .tags a:hover {
+            background-color: var(--cf-amber) !important;
+            color: #111 !important;
+            text-shadow: none !important;
+        }
+
+        /* ── Pager ─────────────────────────────────────────────────────── */
+        .pager li > a,
+        .pager li > span {
+            background-color: #1e1e14 !important;
+            border: 1px solid var(--cf-border) !important;
+            color: var(--cf-amber) !important;
+            border-radius: 2px;
+        }
+
+        .pager li > a:hover {
+            background-color: var(--cf-amber) !important;
+            color: #111 !important;
+            text-shadow: none !important;
+        }
+
+        /* ── Sidebar ───────────────────────────────────────────────────── */
+        .sidebar-container h5 {
+            color: var(--cf-teal) !important;
+            text-shadow: var(--cf-glow-t);
+            letter-spacing: 0.12em;
+        }
+    </style>
 </head>
