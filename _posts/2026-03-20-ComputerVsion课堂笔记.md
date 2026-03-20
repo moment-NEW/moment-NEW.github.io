@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      操作系统学习笔记
+title:      圣光机大二下CV学习笔记
 subtitle:   Linux学习笔记
 date:       2026-03-20
 author:     BY CGH
