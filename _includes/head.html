@@ -165,8 +165,9 @@
         }
 
         .intro-header .site-heading, .intro-header .post-heading, .intro-header .page-heading {
-            padding-top: 80px;
-            text-align: left; /* Shift from center to left for poster look */
+            padding-top: 140px; /* Shift from center to lower for poster look */
+            padding-bottom: 60px;
+            text-align: left;
         }
 
         .intro-header .site-heading h1, .intro-header .post-heading h1, .intro-header .page-heading h1 {
@@ -329,9 +330,9 @@
             color: #f8f8f2 !important; /* Bright accessible text */
             padding: 20px !important;
             box-shadow: 8px 8px 0px var(--sov-black) !important; /* Retaining brutalist shadow */
-            font-family: var(--sov-font-mono) !important;
-            font-size: 0.95rem !important;
-            line-height: 1.5;
+            font-family: 'Cascadia Code', 'Fira Code', Consolas, var(--sov-font-mono) !important;
+            font-size: 1.05rem !important; /* Increased font-size */
+            line-height: 1.6;
             overflow-x: auto;
         }
         
@@ -341,8 +342,8 @@
             color: var(--sov-black) !important;
             border: 2px solid var(--sov-black) !important;
             box-shadow: 2px 2px 0px var(--sov-red) !important;
-            font-family: var(--sov-font-mono) !important;
-            font-size: 0.9rem !important;
+            font-family: 'Cascadia Code', 'Fira Code', Consolas, var(--sov-font-mono) !important;
+            font-size: 1rem !important; /* Slightly larger inline code */
             font-weight: bold;
         }
         
