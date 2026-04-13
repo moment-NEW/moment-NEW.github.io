@@ -11,8 +11,8 @@ github_repo: "https://github.com/moment-NEW/moment-NEW.github.io" # you code rep
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "在复古介质的质感里，写向未来的代码笔记。"
-sidebar-avatar: /img/avatar_m.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-about-description: "人类…一定要珍惜自己的羁绊。"
+sidebar-avatar: /img/spike.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
