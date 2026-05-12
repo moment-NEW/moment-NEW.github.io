@@ -109,3 +109,14 @@ rt_used const struct rt_init_desc __rt_init_desc_rt_hw_usart_init
 };
 ```
 值得注意的是，这里存的是函数指针，尽管宏定义完全可以复制整个函数进去，但是这里并非如此。  
+
+
+
+
+
+## BSP制作的坑
+最近做BSP的时候没少吃苦头，各种老旧版本包和CubeMX版本问题,搞得我头都大了。
+需要注意的是，RT-Thread 的sconscript只做了老版本的Cubemx配置，也就是没有core目录
+
+而这个生成结构是控制的，这个选项又是在ioc初始创建的时候固定的，所以就可能产生你怎么改都报错的问题
+最终的解决办法就是修改ioc的文件内容，可以参考这个链接：https://community.st.com/t5/stm32cubeide-mcus/stm32cubeide-application-strucutre-is-stuck-to-advanced/td-p/782881
