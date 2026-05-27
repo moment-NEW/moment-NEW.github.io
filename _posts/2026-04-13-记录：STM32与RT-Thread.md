@@ -120,3 +120,50 @@ rt_used const struct rt_init_desc __rt_init_desc_rt_hw_usart_init
 
 而这个生成结构是控制的，这个选项又是在ioc初始创建的时候固定的，所以就可能产生你怎么改都报错的问题
 最终的解决办法就是修改ioc的文件内容，可以参考这个链接：https://community.st.com/t5/stm32cubeide-mcus/stm32cubeide-application-strucutre-is-stuck-to-advanced/td-p/782881
+解决了以上的问题之后，依然有很多报错和警告
+其中一个是关于串口的：
+ PeriphClkInitStruct.Usart16ClockSelection = RCC_USART16910CLKSOURCE_D2PCLK2;
+cubemx生成的stm32h7xx_hal_msp.c这个文件中的定义如上，但是这个宏是找不到的，实际应该改成如下：
+ PeriphClkInitStruct.Usart16ClockSelection = RCC_USART16CLKSOURCE_D2PCLK2;
+ 这个是因为Cubemx的HAL库和RT的版本不一致，也算是通病了。手动修改即可
+ 然后修好这些你会发现还会窜出更多的报错，其中包括：
+ .\build\keil\Obj\rt-thread.axf: Error: L6218E: Undefined symbol Error_Handler (referred from stm32h7xx_hal_msp.o).
+ 这是因为这个msp文件是被包含进去的，本身依赖的是cubemx生成的main.h
+ #include "main.h"
+ Cubemx生成的src下的main.h理论上是有Error_Handler的，但是我们看Sconscript，这个RT的类CMAKE文件:
+ ```
+ # add the general drivers.
+src = Glob('board.c')
+src += Glob('CubeMX_Config/Src/stm32h7xx_hal_msp.c')
+
+path = [cwd]
+path += [cwd + '/CubeMX_Config/Inc']
+```
+src里面包含了board.c以及msp文件，其余全都是inc包含。也就是没有包含board文件夹以上的任何文件。然后再看BSP级的Sconscript：
+```
+# for module compiling
+import os
+Import('RTT_ROOT')
+Import('env')
+from building import *
+
+cwd = GetCurrentDir()
+objs = []
+list = os.listdir(cwd)
+
+
+env.Append(CPPDEFINES = ['STM32H723xx'])
+
+for d in list:
+    path = os.path.join(cwd, d)
+    if os.path.isfile(os.path.join(path, 'SConscript')):
+        objs = objs + SConscript(os.path.join(d, 'SConscript'))
+
+Return('objs')
+```
+可以看到就是简单的遍历整合了目录下所有的子Sconscript。然后有没有main.c被包含进去呢？有的兄弟有的，但是是RT自己的，在Application目录下。这个main.c里显然没有实现一个Error_Handler。没记错的话，RT-Thread的drv_common.c里面有Error_Handler的实现。因此我们使用这个是最合适的，为了把编译链串起来，最好的办法是在USER_INCLUDE里面加一行include。（msp包含main，但是这个main.H是CUBEMX的INC目录下的，不能通过包含链包到board.c等里面）
+
+
+### ws2812相关
+这里不得不吐槽RT-Thread的维护乱象，软件包作者几乎几年没更新了，一些冷门的元件甚至提issue都是石沉大海，email也联系不上。比如这个SEAN_WS2823B，首先不知道这个SEAN何意味，有这个的宏基本上全报错。然后更神秘的是使用了不知道哪个版本的古早SPI API，传入的参数包括GPIOA之类的，由于用不到CS引脚这个玩意不会直接报错而是被算作隐式声明什么的，莫名其妙地被使用进去。然后更神秘的是可能由于恰到好处的代码偏移量，这个GPIOA被当成GPIO_PINxx解释之后，长度超过了RT-Thread的限制，因而会被拒绝回收，又因为根本没用到这个引脚，所以不会引发错误。如果你但凡改动一点点代码，改变了这个玩意在内存中的位置，出来的就是莫名其妙的野指针，直接短于RT-Thread的长度限制，导致后续一系列的HAL库Bus Fault，这还是对应的奇怪外设没有使能时钟的情况下，如果使能了会出什么毛病我都不敢想象............
+除此之外，这个DM-MC02的ws2812时序也很奇怪，官方例程的SPI是4bit的，频率也不一样，这个RT软件包推荐的是差不多6Mhz，我愣是死活不能输入0X00的黑色RGB，只能让其切换颜色。
