@@ -180,3 +180,6 @@ Return('objs')
 为此我还研究了一下H7的总线调度，相关文章如下
 https://forum.anfulai.cn/forum.php?mod=viewthread&tid=86980
 https://www.bilibili.com/video/BV1bT4y117TJ/?vd_source=947bb78345fa18af5c0b04168b5dceb7
+
+## BDMA相关
+在完成上述的SPI驱动适配后，我着手使用DMA，然后迅即发现SPI6没有DMA外设，取而代之的是BDMA。相关的知识我单独写到了WDFK-IS-DMA那里。
