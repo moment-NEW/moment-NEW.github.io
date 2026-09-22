@@ -61,8 +61,8 @@ kramdown:
 # Gitalk
 gitalk:
   enable: true    #是否开启Gitalk评论
-  clientID: ""                          #生成的clientID
-  clientSecret: ""                      #生成的clientSecret
+  clientID: "Ov23li6qU5kL4tJi6rVI"      #生成的clientID
+  clientSecret: "7b90dfe4f7b6b57b3852f9f9e0adec505f70437b" #生成的clientSecret
   repo: moment-NEW.github.io             #仓库名称
   owner: moment-NEW                      #github用户名
   admin: moment-NEW
