@@ -98,6 +98,9 @@ service-worker: true
 # Friends
 friends: [
     {
+        title: "Nan0inPsyLog",
+        href: "https://nan0in27.cn"
+    },{
         title: "GitHub Pages",
         href: "https://pages.github.com"
     },{
