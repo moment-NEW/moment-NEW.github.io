@@ -56,9 +56,10 @@
     <!-- ga & ba script hoook -->
     <script></script>
 
-    <!-- GoatCounter: privacy-friendly page view analytics -->
+    <!-- GoatCounter: privacy-friendly analytics; count.js self-hosted to
+         bypass the DNS-poisoned gc.zgo.at CDN domain -->
     <script data-goatcounter="https://moment.goatcounter.com/count"
-            async src="https://gc.zgo.at/count.js"></script>
+            async src="{{ '/count.js' | prepend: site.baseurl }}"></script>
 
     <!-- Soviet Constructivism / Avant-Garde Aesthetic Overrides -->
     <style>
