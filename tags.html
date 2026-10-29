@@ -50,7 +50,7 @@ header-img: "img/tag-bg.jpg"
 				 <div class="post-preview">
 				    <a href="{{ post.url | prepend: site.baseurl }}">
 				        <h2 class="post-title">
-                            {{ post.title }}
+                            {{ post.title }}{% if post.password or post.password_sha %} <span title="已上锁">🔒</span>{% endif %}
 				        </h2>
 				        {% if post.subtitle %}
 				        <h3 class="post-subtitle">

@@ -58,7 +58,140 @@ layout: default
                 col-md-10 col-md-offset-1
                 post-container">
 
+{% if page.password or page.password_sha %}
+                <style>
+                    /* ── 口令锁：形式主义防线，挡无心人（源码可见正文，勿存幻想） ── */
+                    #post-locked-content[hidden] { display: none !important; }
+                    .post-lock {
+                        background: var(--sov-paper);
+                        border: 4px solid var(--sov-black);
+                        box-shadow: 8px 8px 0px var(--sov-red);
+                        padding: 40px 30px;
+                        margin: 30px 0;
+                        text-align: center;
+                    }
+                    .post-lock h3 {
+                        font-family: var(--sov-font-head) !important;
+                        color: var(--sov-black) !important;
+                        text-transform: uppercase;
+                        letter-spacing: 2px;
+                        margin: 0 0 10px 0;
+                    }
+                    .post-lock p {
+                        color: var(--sov-black) !important;
+                        margin-bottom: 20px;
+                    }
+                    .post-lock-row {
+                        display: flex;
+                        gap: 10px;
+                        max-width: 360px;
+                        margin: 0 auto;
+                    }
+                    .post-lock-input {
+                        flex: 1;
+                        min-width: 0;
+                        border: 3px solid var(--sov-black);
+                        border-radius: 0;
+                        background: var(--sov-white);
+                        padding: 8px 12px;
+                        font-family: var(--sov-font-mono);
+                        color: var(--sov-black);
+                        outline: none;
+                    }
+                    .post-lock-input:focus { box-shadow: inset 0 -3px 0 var(--sov-red); }
+                    .post-lock-btn {
+                        border: 3px solid var(--sov-black);
+                        border-radius: 0;
+                        background: var(--sov-red);
+                        color: var(--sov-white);
+                        font-family: var(--sov-font-head);
+                        text-transform: uppercase;
+                        letter-spacing: 2px;
+                        padding: 8px 18px;
+                        cursor: pointer;
+                        transition: transform 0.05s ease;
+                    }
+                    .post-lock-btn:hover { transform: translate(-2px, -2px); }
+                    .post-lock-btn:active { transform: translate(1px, 1px); box-shadow: none; }
+                    .post-lock-msg {
+                        min-height: 1.2em;
+                        margin: 15px 0 0 0;
+                        color: var(--sov-red) !important;
+                        font-weight: bold;
+                    }
+                    .post-lock.shake { animation: post-lock-shake 0.3s; }
+                    @keyframes post-lock-shake {
+                        0%, 100% { transform: translateX(0); }
+                        25% { transform: translateX(-8px); }
+                        75% { transform: translateX(8px); }
+                    }
+                </style>
+
+                <div id="post-lock" class="post-lock">
+                    <h3>🔒 LOCKED</h3>
+                    <p>此篇已上锁。输入口令，浏览器本地解锁阅读。</p>
+                    <div class="post-lock-row">
+                        <input type="password" id="post-lock-input" class="post-lock-input"
+                               placeholder="口令" autocomplete="off">
+                        <button type="button" id="post-lock-btn" class="post-lock-btn">解锁</button>
+                    </div>
+                    <p class="post-lock-msg" id="post-lock-msg"></p>
+                </div>
+                <div id="post-locked-content" hidden>{{ content }}</div>
+
+                <script>
+                (function () {
+                    var EXPECTED_SHA = '{{ page.password_sha }}';
+                    var PLAIN = {{ page.password | jsonify }};
+                    var KEY = 'unlock:' + location.pathname;
+                    var lockEl = document.getElementById('post-lock');
+                    var contentEl = document.getElementById('post-locked-content');
+                    var input = document.getElementById('post-lock-input');
+                    var msg = document.getElementById('post-lock-msg');
+
+                    function reveal() {
+                        lockEl.hidden = true;
+                        contentEl.hidden = false;
+                        try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+                    }
+
+                    function sha256Hex(str) {
+                        return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))
+                            .then(function (buf) {
+                                return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+                                    return ('0' + b.toString(16)).slice(-2);
+                                }).join('');
+                            });
+                    }
+
+                    function fail() {
+                        msg.textContent = '口令不对，再想想。';
+                        lockEl.classList.remove('shake');
+                        void lockEl.offsetWidth;
+                        lockEl.classList.add('shake');
+                    }
+
+                    function tryUnlock() {
+                        var v = input.value;
+                        var check = EXPECTED_SHA
+                            ? sha256Hex(v).then(function (hex) { return hex === EXPECTED_SHA; })
+                            : Promise.resolve(v === PLAIN);
+                        check.then(function (ok) { ok ? reveal() : fail(); }).catch(fail);
+                    }
+
+                    document.getElementById('post-lock-btn').addEventListener('click', tryUnlock);
+                    input.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter') tryUnlock();
+                    });
+
+                    var unlocked = false;
+                    try { unlocked = sessionStorage.getItem(KEY) === '1'; } catch (e) {}
+                    if (unlocked) reveal();
+                })();
+                </script>
+{% else %}
 				{{ content }}
+{% endif %}
 
                 <hr style="visibility: hidden;">
 
@@ -84,6 +217,7 @@ layout: default
 
                 <!--Gitalk评论start  -->
                 {% if site.gitalk.enable %}
+                {% unless page.password or page.password_sha %}
                 <!-- 引入Gitalk评论插件  -->
                 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
                 <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
@@ -103,6 +237,7 @@ layout: default
                     });
                     gitalk.render('gitalk-container');
                 </script>
+                {% endunless %}
                 {% endif %}
                 <!-- Gitalk end -->
 

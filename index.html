@@ -7,7 +7,7 @@ description: "Thinking will not overcome fear but action will."
 <div class="post-preview">
     <a href="{{ post.url | prepend: site.baseurl }}">
         <h2 class="post-title">
-            {{ post.title }}
+            {{ post.title }}{% if post.password or post.password_sha %} <span title="已上锁">🔒</span>{% endif %}
         </h2>
         {% if post.subtitle %}
         <h3 class="post-subtitle">
@@ -15,7 +15,11 @@ description: "Thinking will not overcome fear but action will."
         </h3>
         {% endif %}
         <div class="post-content-preview">
+            {% if post.password or post.password_sha %}
+            🔒 此篇已上锁，钥匙在博主手里。
+            {% else %}
             {{ post.content | strip_html | truncate:200 }}
+            {% endif %}
         </div>
     </a>
     <p class="post-meta">
