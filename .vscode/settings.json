@@ -1,0 +1,7 @@
+{
+    // 粘贴进 Markdown 的截图直接存到 img/，避免散落在 _posts/ 里
+    // 语义化命名（如 de- 前缀）仍需发布前手动改一下
+    "markdown.copyFiles.destination": {
+        "**/*.md": "img/${fileName}"
+    }
+}
