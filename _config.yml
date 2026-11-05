@@ -98,6 +98,9 @@ service-worker: true
 # Friends
 friends: [
     {
+        title: "ByTheFox",
+        href: "https://bythefox.top/blog/"
+    },{
         title: "Nan0inPsyLog",
         href: "https://nan0in27.cn"
     },{
