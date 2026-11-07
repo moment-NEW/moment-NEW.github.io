@@ -16,7 +16,7 @@ description: "Thinking will not overcome fear but action will."
         {% endif %}
         <div class="post-content-preview">
             {% if post.password or post.password_sha %}
-            🔒 此篇已上锁，钥匙在博主手里。
+            🔒 此篇已上锁——门虽设而无锁，扉空系以纤草
             {% else %}
             {{ post.content | strip_html | truncate:200 }}
             {% endif %}
