@@ -99,7 +99,7 @@ service-worker: true
 friends: [
     {
         title: "ByTheFox",
-        href: "https://bythefox.top/blog/"
+        href: "https://bythefox.xyz/blog/"
     },{
         title: "Nan0inPsyLog",
         href: "https://nan0in27.cn"
