@@ -268,3 +268,71 @@
 </script>
 {% endif %}
 
+
+<!-- Announcement Modal (global: available on all pages via bell icon) -->
+<div class="modal fade" id="announcementModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="announcementTitle">公告</h4>
+            </div>
+            <div class="modal-body" id="announcementBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">知道了</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    var announcements = {{ site.data.announcements | jsonify }};
+    if (!announcements || !announcements.length) return;
+
+    // 取 date <= 今天 的最新一条（date 最大）
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var active = announcements.filter(function (a) {
+        return new Date(a.date) <= today;
+    }).sort(function (a, b) {
+        return new Date(b.date) - new Date(a.date);
+    });
+    if (!active.length) return;
+
+    var latest = active[0];
+    var $ = window.jQuery;
+    if (!$ || !$.fn.modal) return;
+
+    var $modal = $('#announcementModal');
+
+    function fillAndShow() {
+        $('#announcementTitle').text(latest.title || '公告');
+        $('#announcementBody').html(latest.body || '');
+        $modal.modal('show');
+    }
+
+    // 导航栏铃铛：点击随时重新查看
+    $('#announcement-reopen').on('click', function (e) {
+        e.preventDefault();
+        fillAndShow();
+    });
+
+    // 自动弹：仅首页，且 localStorage 未记录该公告 id
+    var isHome = /^\/(index\.html)?$/.test(window.location.pathname);
+    if (isHome) {
+        var seenId = null;
+        try { seenId = localStorage.getItem('ann-seen'); } catch (e) {}
+        if (seenId !== latest.id) {
+            fillAndShow();
+        }
+    }
+
+    // 关闭时记录已读
+    $modal.one('hidden.bs.modal', function () {
+        try { localStorage.setItem('ann-seen', latest.id); } catch (e) {}
+    });
+})();
+</script>
