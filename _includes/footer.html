@@ -287,18 +287,62 @@
     </div>
 </div>
 
+<!-- Announcement floating bell (bottom-right, site-wide, outside the navbar) -->
+<style>
+.ann-bell {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1039; /* below the Bootstrap modal backdrop (1040): hides while modal opens */
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #343a40;
+    color: #fff;
+    text-align: center;
+    line-height: 44px;
+    font-size: 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+    cursor: pointer;
+    opacity: .55;
+    transition: opacity .2s ease, transform .2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.ann-bell:hover,
+.ann-bell:focus {
+    opacity: .9;
+    transform: translateY(-2px);
+    color: #fff;
+    text-decoration: none;
+}
+</style>
+<a href="javascript:void(0)" class="ann-bell" id="announcement-reopen"
+   title="查看公告" aria-label="查看公告">
+    <span class="fa fa-bell"></span>
+</a>
+
 <script>
 (function () {
     var announcements = {{ site.data.announcements | jsonify }};
     if (!announcements || !announcements.length) return;
 
+    // 本地日期的 YYYY-MM-DD 串。全程用字符串比较：
+    // new Date("YYYY-MM-DD") 解析为 UTC 零点，和本地零点比较会有时区偏移，
+    // 导致公告发布当天在东八区被误判为"未来"。
+    function ymd(s) {
+        return String(s).slice(0, 10);
+    }
+    var d = new Date();
+    var todayStr = d.getFullYear() + '-' +
+        ('0' + (d.getMonth() + 1)).slice(-2) + '-' +
+        ('0' + d.getDate()).slice(-2);
+
     // 取 date <= 今天 的最新一条（date 最大）
-    var today = new Date();
-    today.setHours(0, 0, 0, 0);
     var active = announcements.filter(function (a) {
-        return new Date(a.date) <= today;
-    }).sort(function (a, b) {
-        return new Date(b.date) - new Date(a.date);
+        return ymd(a.date) <= todayStr;
+    }).sort(function (x, y) {
+        var dx = ymd(x.date), dy = ymd(y.date);
+        return dx < dy ? 1 : dx > dy ? -1 : 0; // 降序
     });
     if (!active.length) return;
 
@@ -314,7 +358,7 @@
         $modal.modal('show');
     }
 
-    // 导航栏铃铛：点击随时重新查看
+    // 右下角铃铛：点击随时重新查看
     $('#announcement-reopen').on('click', function (e) {
         e.preventDefault();
         fillAndShow();
@@ -330,8 +374,8 @@
         }
     }
 
-    // 关闭时记录已读
-    $modal.one('hidden.bs.modal', function () {
+    // 关闭时记录已读。用 on 而非 one：换了新公告后第二次关闭也要写入
+    $modal.on('hidden.bs.modal', function () {
         try { localStorage.setItem('ann-seen', latest.id); } catch (e) {}
     });
 })();
