@@ -289,8 +289,6 @@
 
 <!-- Announcement floating bell (bottom-right, site-wide, outside the navbar) -->
 <style>
-/* Constructivist style: follows the sov palette / hard-edged language
-   defined in _includes/head.html (navbar's red bottom bar, clip-path brand) */
 .ann-bell {
     position: fixed;
     right: 20px;
@@ -298,24 +296,23 @@
     z-index: 1039; /* below the Bootstrap modal backdrop (1040): hides while modal opens */
     width: 44px;
     height: 44px;
-    background: var(--sov-red, #FF5722);
-    color: #fff !important; /* beats the global `a { color: sov-red !important }` */
+    border-radius: 50%;
+    background: #343a40;
+    color: #fff;
     text-align: center;
     line-height: 44px;
     font-size: 18px;
-    border: none;
-    /* geometric corner cut, echoing .navbar-brand's clip-path */
-    clip-path: polygon(0 0, 100% 0, 100% 78%, 78% 100%, 0 100%);
-    box-shadow: 4px 4px 0 rgba(0, 0, 0, .25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
     cursor: pointer;
-    transition: transform .2s ease, box-shadow .2s ease;
+    opacity: .55;
+    transition: opacity .2s ease, transform .2s ease;
     -webkit-tap-highlight-color: transparent;
 }
 .ann-bell:hover,
 .ann-bell:focus {
-    color: #fff !important;
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 rgba(0, 0, 0, .3);
+    opacity: .9;
+    transform: translateY(-2px);
+    color: #fff;
     text-decoration: none;
 }
 
