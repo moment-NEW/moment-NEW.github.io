@@ -44,3 +44,69 @@ description: "Thinking will not overcome fear but action will."
     {% endif %}
 </ul>
 {% endif %}
+
+<!-- Announcement Modal -->
+<div class="modal fade" id="announcementModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="announcementTitle">公告</h4>
+            </div>
+            <div class="modal-body" id="announcementBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">知道了</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    var announcements = {{ site.data.announcements | jsonify }};
+    if (!announcements || !announcements.length) return;
+
+    // 取 date <= 今天 的最新一条（date 最大）
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var active = announcements.filter(function (a) {
+        return new Date(a.date) <= today;
+    }).sort(function (a, b) {
+        return new Date(b.date) - new Date(a.date);
+    });
+    if (!active.length) return;
+
+    var latest = active[0];
+    var seenId = null;
+    try { seenId = localStorage.getItem('ann-seen'); } catch (e) {}
+    if (seenId === latest.id) return;
+
+    // 注入内容并弹出
+    document.getElementById('announcementTitle').textContent = latest.title || '公告';
+    document.getElementById('announcementBody').innerHTML = latest.body || '';
+    var $modal = document.getElementById('announcementModal');
+    var jq = window.jQuery;
+    if (jq) {
+        jq( $modal ).modal('show');
+        jq( $modal ).one('hidden.bs.modal', function () {
+            try { localStorage.setItem('ann-seen', latest.id); } catch (e) {}
+        });
+    } else {
+        // jQuery 未加载的兜底：直接显示
+        $modal.classList.add('in');
+        $modal.style.display = 'block';
+        $modal.setAttribute('aria-hidden', 'false');
+        $modal.addEventListener('click', function (e) {
+            if (e.target === $modal || e.target.classList.contains('close') ||
+                e.target.classList.contains('btn')) {
+                $modal.classList.remove('in');
+                $modal.style.display = 'none';
+                $modal.setAttribute('aria-hidden', 'true');
+                try { localStorage.setItem('ann-seen', latest.id); } catch (e) {}
+            }
+        });
+    }
+})();
+</script>
