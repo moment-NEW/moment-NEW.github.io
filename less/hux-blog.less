@@ -210,10 +210,12 @@ pre code{
 	 * which would cover tags. A absolute positioning make a new layer.
 	 */
 	.navbar-default .navbar-collapse{
-		position: absolute; 
+		position: absolute;
      	right: 0;
 		border: none;
-		background: white;
+		// overridable by inline theme in head.html; a dark default keeps
+		// white menu links readable instead of a blank white plate
+		background: @gray-dark;
 		box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, 0.2);
 		box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.239216) 0px 1px 4px;
 		border-radius: 2px;

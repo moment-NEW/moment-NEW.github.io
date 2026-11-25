@@ -154,6 +154,28 @@
             background-color: transparent !important;
         }
 
+        /* ── Mobile navbar (hamburger menu) ──────────────────────────────
+           The stock Hux CSS paints the collapsed menu plate pure white,
+           while the rules above force the links white — white-on-white
+           made the opened menu look like a blank plate. Restyle the plate
+           in the site theme (black + red hairline + hard shadow). */
+        @media only screen and (max-width: 767px) {
+            .navbar-default .navbar-collapse {
+                background-color: var(--sov-black) !important;
+                border: 2px solid var(--sov-red) !important;
+                border-radius: 0 !important;
+                box-shadow: 8px 8px 0 var(--sov-black) !important;
+            }
+            .navbar-default .nav li a {
+                font-family: var(--sov-font-mono) !important;
+                font-size: 14px !important;
+            }
+            .navbar-default .nav li a:hover {
+                border-left: 6px solid var(--sov-red) !important;
+                padding-left: 14px !important;
+            }
+        }
+
         /* ── Page Header / Intro ───────────────────────────────────────── */
         .intro-header {
             position: relative;
