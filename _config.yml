@@ -58,15 +58,19 @@ kramdown:
 # Disqus（https://disqus.com/）
 # disqus_username: ""
 
-# Gitalk
-gitalk:
-  enable: true    #是否开启Gitalk评论
-  clientID: "Ov23li6qU5kL4tJi6rVI"      #生成的clientID
-  clientSecret: "7b90dfe4f7b6b57b3852f9f9e0adec505f70437b" #生成的clientSecret
-  repo: moment-NEW.github.io             #仓库名称
-  owner: moment-NEW                      #github用户名
-  admin: moment-NEW
-  distractionFreeMode: true #是否启用类似FB的阴影遮罩
+# giscus（https://giscus.app/zh-CN）— 基于 GitHub Discussions 的评论系统
+# 前提：仓库公开 + 开启 Discussions + 安装 giscus App（https://github.com/apps/giscus）
+giscus:
+  enable: true
+  repo: moment-NEW/moment-NEW.github.io
+  repo-id: R_kgDOJd0szA
+  category: Announcements
+  category-id: DIC_kwDOJd0szM4DMKIn
+  mapping: pathname        # discussion 标题按页面路径匹配
+  reactions-enabled: true # 是否显示表情回应
+  input-position: top     # 评论输入框在顶部
+  theme: light            # light / dark / preferred_color_scheme / 主题名
+  lang: zh-CN
 
 
 # 统计

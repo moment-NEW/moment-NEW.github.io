@@ -421,7 +421,7 @@ AnimalTableController *vc = [[AnimalTableController alloc]
 ```
 替换为：
 
-```obcj
+```objc
 AnimalPagerController *vc = [[AnimalPagerController alloc] init];
 ```
 
